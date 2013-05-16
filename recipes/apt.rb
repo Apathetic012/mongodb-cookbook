@@ -19,7 +19,6 @@ bash "freeze mongodb-10gen" do
 end
 
 service "mongodb" do
-  provider Chef::Provider::Service::Upstart
   supports :start => true, :stop => true, :restart => true
   action [:enable, :start]
 end
@@ -36,15 +35,6 @@ directory node[:mongodb][:logpath] do
   group "mongodb"
   mode "0775"
   recursive true
-end
-
-template "/etc/init/mongodb.conf" do
-  source "mongodb.upstart.erb"
-  owner "root"
-  group "root"
-  mode "0644"
-  backup false
-  notifies :restart, resources(:service => "mongodb"), :delayed
 end
 
 template "/etc/mongodb.conf" do
